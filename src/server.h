@@ -8,6 +8,9 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <vector>
+
+using namespace std;
 
 char message_buf[];
 
@@ -15,7 +18,7 @@ char message_buf[];
 struct chat{
 	int numberOfUsers = sizeof(usrs);
 	int chatId;
-	user usrs[];
+	vetor<user> usr;
 }
 
 //initialize message buffer
@@ -34,4 +37,4 @@ int send_message(int connfd, char*message)
 //check for "/"
 int is_list_message(char *message)
 
-//send 
+//TO BE COMPLETED
