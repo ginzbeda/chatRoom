@@ -1,12 +1,13 @@
 #include "server.h"
 
+char message_buf[512];
 
 
-
-// void init_message_buf(){
-// 	for(int i = 0; i<sizeof(message_buf); i++)
-// 		strcpy(message_buf[i], "");
-// }
+void init_message_buf(){
+	for(int i = 0; i<sizeof(message_buf); i++){
+		strcpy(&message_buf[i], "");
+	}
+}
 
 // void add_message(char *buf){
 // 	pthread_mutex_lock(&lock)

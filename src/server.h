@@ -17,8 +17,6 @@ using namespace std;
 
 typedef struct sockaddr SA;
 
-char message_buf[512];
-
 #define MAXLINE 8192
 #define LISTENQ 1024 // second argument to listen()
 
