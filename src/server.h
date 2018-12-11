@@ -16,13 +16,16 @@
 
 using namespace std;
 
-typedef struct sockaddr SA;
+typedef struct sockaddr SA; //should be sockaddr_in
 
-#define MAXLINE 8192
-#define LISTENQ 1024 // second argument to listen()
+
+//variable for username - char *username; or string username; if we need username lengths later
+
+#define MAXLINE 8192 // maximum length of a line - max length of a message
+#define LISTENQ 1024 // second argument to listen() - is usually 5 but idk
 
 //initialize message buffer
-void init_message_buf();
+void init_message_buf();//or just use bzero(buff,len);
 
 int open_listenfd(int port);
 
@@ -33,7 +36,15 @@ void *thread(void *vargp);
 // 	vetor<user> usr;
 // }
 
+/*
 
+vector for list of usernames in a room
+vector for list of rooms
+user structs should have
+	- username
+	-socket address
+
+*/
 
 
 //adds message to message buffer
