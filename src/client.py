@@ -16,48 +16,32 @@ def send(sock, message):
 def recv(sock):
 		return sock.recv(1024).decode('utf-8')
 
-def list(sock):
-    send(sock, '-')
-    result = recv(sock).rstrip()
-    if result == '':
-        return []
-    else:
-        return result.split(',')[0:-1]
 
-def last_list(sock):
-    xs = list(sock)
-    if len(xs) == 0:
-        return ''
-    else:
-        return xs[-1]
-
-def prompt_on_last(sock):
-    last = last_list(sock)
-    if last == '':
-        return ask()
-    else:
-        return ask(last)
 
 def client():
-	# socket = connect()
+	connection = connect()
 	if len(sys.argv)>1:
 		# if there is a file
 		with open(sys.argv[1]) as f:
 			content = f.readlines()
 			content = [x.strip() for x in content] 
+			size = len(content)
+			count = 0
 			print(content)
+			while  count < size:
+				send(connection, content[count])
+				response = recv(connection)
+				print(response.strip())
+				count+=1
+
 	else:
 		# else take input
 		message = input('What is your input?')
 		while message != "/QUIT":
-			send(socket, message)
-			respose = recv(socket)
+			send(connection, message)
+			respose = recv(connection)
 			print(response.strip())
-			message = prompt_on_last(socket)
-	# print("This is the name of the script:" , sys.argv[0])
-	# print("Number of arguments: ", len(sys.argv))
-	# print("These are the arguments:", str(sys.argv))
-	# message = input('What is your input?')
-	# print('input: ' + message)
+			message = sockask(connection)
+
 
 client()
