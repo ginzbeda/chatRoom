@@ -1,6 +1,4 @@
-#include "chat.h"
 #include "server.h"
-#include "user.h"
 
 int main(int argc, char **argv){
 	//checks arguments and prints usage
