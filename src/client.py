@@ -16,7 +16,8 @@ def send(sock, message):
 def recv(sock):
 		return sock.recv(1024).decode('utf-8')
 
-
+def ask(prompt=':-p'):
+    return input('({prompt}) ')
 
 def client():
 	connection = connect()
@@ -36,7 +37,7 @@ def client():
 
 	else:
 		# else take input
-		message = input('What is your input?')
+		message = ask()
 		while message != "/QUIT":
 			send(connection, message)
 			respose = recv(connection)
