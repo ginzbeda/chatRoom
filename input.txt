@@ -1,3 +1,0 @@
-/JOIN boyz
-/ROOMS
-/nickname"Message"

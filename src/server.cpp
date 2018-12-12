@@ -68,9 +68,30 @@ void *thread(void *vargp) {
   		cout<<args[i] <<endl;
   	}
 
-  	if(strcmp(args[0], "\JOIN")){
+  	if(strcmp(args[0], "\\JOIN") == 0){ //EDITED
   		join(args[1], args[2]);
-  	}
+  	}else if (strcmp(args[0], "\\ROOMS") == 0)
+    {
+
+    }else if(strcmp(args[0], "\\LEAVE") == 0)
+    {
+
+    }else if(strcmp(args[0], "\\WHO") == 0)
+    {
+
+    }else if(strcmp(args[0], "\\HELP") == 0)
+    {
+
+    }else if(/* condition for nickname and message */)
+      //send message to nickname from sender
+    
+    }else if(/* condition for incorrect command*/)
+    {
+      //print error message
+
+    }else{
+      //send message to every connected client
+    }
   }
   printf("client disconnected.\n");
   // Don't forget to close the connection!
