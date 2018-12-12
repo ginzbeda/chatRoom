@@ -58,16 +58,17 @@ void *thread(void *vargp) {
   // Handle the echo client requests.
   while(receive_message(connfd, buff)){
   	cout<< "prompt recieved: " << buff <<endl;
+  	//separate input into tokens
   	char *token = strtok(buff, " ");
+  	//push tokens into holder
   	while(token != NULL){
   		args.push_back(token);
   		token = strtok(NULL, " ");
   	}
-  	// send_message(connfd, buff);
   	for(size_t i = 0; i<args.size();i++){
   		cout<<args[i] <<endl;
   	}
-
+  	//check first token for commands
   	if(strcmp(args[0], "\\JOIN")){
   		join(args[1], args[2]);
   	}
