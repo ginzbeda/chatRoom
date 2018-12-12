@@ -16,10 +16,11 @@ int chattr(user *change){
 	return 1;
 }
 
-int join(char name[25], char room[25]){
-	for(int i=0, i<sizeof(Chat::chatrms); i++){
-		if()
-	}
+int join(char *name, char *room){
+	// for(int i=0; i<Chat::chatrms.size(); i++){
+	// 	if()
+	// }
+	return 1;
 }
 int rooms();
 int leave();

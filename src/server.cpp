@@ -8,7 +8,7 @@ vector<user> usrs;
 
 
 void init_message_buf(){
-	for(int i = 0; i<sizeof(message_buf); i++){
+	for(size_t i = 0; i<strlen(message_buf); i++){
 		strcpy(&message_buf[i], "");
 	}
 }
@@ -68,7 +68,7 @@ void *thread(void *vargp) {
   		cout<<args[i] <<endl;
   	}
 
-  	if(strcmp(args[0], "\JOIN")){
+  	if(strcmp(args[0], "\\JOIN")){
   		join(args[1], args[2]);
   	}
   }
