@@ -11,7 +11,7 @@
 #include <vector>
 #include <iostream>
 
-#include "user.h"
+#include "connection.h"
 #include "chat.h"
 
 using namespace std;
