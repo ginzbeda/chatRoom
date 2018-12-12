@@ -1,7 +1,11 @@
 #include "server.h"
+#include "chat.h"
+#include "connection.h"
 
 char message_buf[512];
 vector<user> usrs;
+
+
 
 void init_message_buf(){
 	for(int i = 0; i<sizeof(message_buf); i++){
@@ -9,14 +13,6 @@ void init_message_buf(){
 	}
 }
 
-// void add_message(char *buf){
-// 	pthread_mutex_lock(&lock)
-
-// }
-
-// int recieve_message(int connfd, char *message)
-
-// int send_message()
 
 int open_listenfd(int port){
 	int listener;
@@ -55,8 +51,27 @@ void *thread(void *vargp) {
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
   free(vargp);
+  //input
+  char buff[MAXLINE];
+  //token holder
+  vector<char*> args;
   // Handle the echo client requests.
-  cout<< connfd << endl;
+  while(receive_message(connfd, buff)){
+  	cout<< "prompt recieved: " << buff <<endl;
+  	char *token = strtok(buff, " ");
+  	while(token != NULL){
+  		args.push_back(token);
+  		token = strtok(NULL, " ");
+  	}
+  	// send_message(connfd, buff);
+  	for(size_t i = 0; i<args.size();i++){
+  		cout<<args[i] <<endl;
+  	}
+
+  	if(strcmp(args[0], "\JOIN")){
+  		join(args[1], args[2]);
+  	}
+  }
   printf("client disconnected.\n");
   // Don't forget to close the connection!
   close(connfd);

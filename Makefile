@@ -7,23 +7,23 @@ OBJ_DIR = obj
 
 # TARGET = main server
 
-main : main.o server.o
-	$(CXX) $(CXXFLAGS) -o main main.o server.o
+main : obj/main.o obj/server.o obj/connection.o
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 
-main.o : main.cpp server.h
-	$(CXX) $(CXXFLAGS) -c main.cpp
+# main.o : main.cpp server.h
+# 	$(CXX) $(CXXFLAGS) -c main.cpp
 
-server.o : server.cpp user.cpp chat.cpp server.h user.h chat.h
-	$(CXX) $(CXXFLAGS) -c server.cpp user.cpp chat.cpp -o server.h user.h chat.h
+# server.o : server.cpp connection.cpp chat.cpp server.h connection.h chat.h
+# 	$(CXX) $(CXXFLAGS) -c server.cpp user.cpp chat.cpp -o server.h user.h chat.h
 
-# ${OBJ_DIR}:
-# 	${MKDIR_P} ${OBJ_DIR}
+${OBJ_DIR}:
+	${MKDIR_P} ${OBJ_DIR}
 
 # $(TARGET) : $(TARGET).c
 # 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).c
 
-# obj/%.o: src/%.cpp ${OBJ_DIR}
-# 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+obj/%.o: src/%.cpp ${OBJ_DIR}
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
 # main: obj/main.o obj/my_malloc.o
 # 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@

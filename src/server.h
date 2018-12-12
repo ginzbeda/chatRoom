@@ -1,7 +1,7 @@
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <netdb.h>
-#include <netinet/in.h>
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +11,7 @@
 #include <vector>
 #include <iostream>
 
-#include "connection.h"
-#include "chat.h"
+
 
 using namespace std;
 

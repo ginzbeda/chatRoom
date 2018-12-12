@@ -40,9 +40,9 @@ def client():
 		message = ask()
 		while message != "/QUIT":
 			send(connection, message)
-			respose = recv(connection)
+			response = recv(connection)
 			print(response.strip())
-			message = sockask(connection)
+			message = ask()
 
 
 client()
