@@ -23,7 +23,7 @@ typedef struct chatroom {
 
 user createUsr(char name[16], sockaddr_in* sockAdr);
 int chattr(user *change);
-int join(char name[25], const char room[25]);
+int join(char *name, char *room);
 int rooms();
 int leave();
 int who();

@@ -8,7 +8,7 @@ vector<user> usrs;
 
 
 void init_message_buf(){
-	for(int i = 0; i<sizeof(message_buf); i++){
+	for(size_t i = 0; i<strlen(message_buf); i++){
 		strcpy(&message_buf[i], "");
 	}
 }
@@ -58,40 +58,24 @@ void *thread(void *vargp) {
   // Handle the echo client requests.
   while(receive_message(connfd, buff)){
   	cout<< "prompt recieved: " << buff <<endl;
+  	//separate input into tokens
   	char *token = strtok(buff, " ");
+  	//push tokens into holder
   	while(token != NULL){
   		args.push_back(token);
   		token = strtok(NULL, " ");
   	}
-  	// send_message(connfd, buff);
   	for(size_t i = 0; i<args.size();i++){
   		cout<<args[i] <<endl;
   	}
+<<<<<<< HEAD
 
   	if(strcmp(args[0], "\\JOIN") == 0){ //EDITED
-  		join(args[1], args[2]);
-  	}else if (strcmp(args[0], "\\ROOMS") == 0)
-    {
-
-    }else if(strcmp(args[0], "\\LEAVE") == 0)
-    {
-
-    }else if(strcmp(args[0], "\\WHO") == 0)
-    {
-
-    }else if(strcmp(args[0], "\\HELP") == 0)
-    {
-
-    }else if(/* condition for nickname and message */)
-      //send message to nickname from sender
-    
-    }else if(/* condition for incorrect command*/)
-    {
-      //print error message
-
-    }else{
-      //send message to every connected client
-    }
+=======
+  	//check first token for commands
+  	if(strcmp(args[0], "\\JOIN")){
+>>>>>>> 9c1e79b5fd27a6d86684188606de4151445fceb9
+  	
   }
   printf("client disconnected.\n");
   // Don't forget to close the connection!
