@@ -1,7 +1,7 @@
 #include "server.h"
 
 char message_buf[512];
-
+vector<user> usrs;
 
 void init_message_buf(){
 	for(int i = 0; i<sizeof(message_buf); i++){
@@ -44,6 +44,8 @@ int open_listenfd(int port){
 	return listener;
 }
 
+
+//DONT UNDERSTAND HOW TO GET MESSAGE FROM THREAD//
 
 /* thread routine */
 void *thread(void *vargp) {
