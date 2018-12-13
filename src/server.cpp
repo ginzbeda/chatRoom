@@ -48,6 +48,7 @@ void *thread(void *vargp) {
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
   free(vargp);
+  User* nUser = new User(connfd);
   //input
   char buff[MAXLINE];
   //token holder
@@ -66,36 +67,38 @@ void *thread(void *vargp) {
   		cout<<args[i] <<endl;
   	}
   	//check first token for commands
-
-  	if(strcmp(args[0], "\\JOIN")){
-        join(args[1], args[2], connfd);
-    }else if (strcmp(args[0], "\\ROOMS") == 0){
-		  rooms(connfd);
-	   }
-	   else if(strcmp(args[0], "\\LEAVE") == 0){
-		leave(connfd);
+    if(*(args[0]) == '\\') // checks if its a command by checking if the first character of the first token is '\'
+    { 
+      if(strcmp(args[0], "\\JOIN")){
+        join(args[1], args[2], nUser);
+      }else if (strcmp(args[0], "\\ROOMS") == 0){
+        rooms(nUser);
+       }
+       else if(strcmp(args[0], "\\LEAVE") == 0){
+      leave(nUser);
+      }
+      else if(strcmp(args[0], "\\WHO") == 0){
+       who(nUser);
+      }
+      else if(strcmp(args[0], "\\HELP") == 0){
+       help(nUser);
+      }
+      else if((args.size()) == 2){ // \nickname message is the only COMMAND with 2 arguments
+        mess(args[0]+1,args[1],nUser); // the +1 is for getting rid of the '\' in the command and sends just the nickname and not \nickname
+      }else{
+        char str0[50],str1[50],str2[30]; // uses three char[] to join to form the command "\LAEVE" command not recognized.
+        strcpy(str0,"\"")                 //trust me, it works
+        strcpy(str1,args[0]);
+        strcpy(str2,"\" command not recognized.\n");
+        strcat(str1,str2);
+        strcat(str0,str1)
+        send_message(connfd,str0);
+      }
+    }else{
+      //sends message to everyone
+      message_everyone(buff, nUser); 
     }
-    else if(strcmp(args[0], "\\WHO") == 0){
-    	who(connfd);
-    }
-    else if(strcmp(args[0], "\\HELP") == 0){
-    	help(connfd);
-    }
-    else if((args.size()) == 2 && (/*  */)){
-      mess(args[0],args[1],connfd);
-    }
-    
-    else if(/* condition for incorrect command*/){
-      //print error message
- 	}
- 	else{
-      //send message to every connected client
-    }
-    
-
-
-
-
+    strncpy(buff, "", strlen(buff));
   	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!

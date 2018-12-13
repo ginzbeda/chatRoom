@@ -10,24 +10,23 @@ class Chatroom;
 class Chat;
 
 //Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
-int join(char *name, char *room, int connfd);
-int rooms(int connfd);
-int leave(int connfd);
-int who(int connfd);
-int help(int connfd);
-int mess(char name[25], char msg[MAXLINE], int connfd);
-int message_everyone(int connfd); //fucntion to message everyone in case command was not found
 
+int join(char *name, char *room, User* usr);
+int rooms(User* usr);
+int leave(User* usr);
+int who(User* usr);
+int help(User* usr);
+int mess(char name[25], char msg[MAXLINE], User* usr);
+int message_everyone(char msg[MAXLINE], User* usr);
 
 class User {
 public:
-	char nickname[16];
+	char nickname[16]; //PROBLEMS WITH USING THESE VARIABLES IN STATIC METHODS
 	int connfd;
 	Chatroom *room;
 	
-	User(int fd, char *name){
+	User(int fd){
 		connfd = fd;
-		strncpy(nickname, name, 16);
 	}
 
 	static void setChatrm(Chatroom *rum){
