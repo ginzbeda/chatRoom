@@ -42,58 +42,36 @@ int leave(User* usr){
 	int connfd = usr->getCon();
 	Chatroom* rum =  usr->getChatrm();
 	vector <User*> usrs = rum->getUsrLst();
-
-	for(auto vector<User*>::iterator user = usrs.begin(); user != usrs.end(); user++){
+	for(vector<User*>::iterator user = usrs.begin(); user != usrs.end(); user++){
 		if(usr->getCon()==(*user)->getCon()){
 			rum = NULL;
 			usrs.erase(user);
-			char* bye = "GOODBYE";
+			char* bye = (char*) "GOODBYE";
 			send_message(connfd, bye);
 			return 1;
 		}
 	}
 	return -1;
-
-	// for(size_t i=0; i<Chat::chatrms.size(); i++){
-	// 	for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
-	// 		if(Chat::chatrms[i].usrs[j].connfd == connfd){
-	// 			//MIGHT CAUSE PROBLEM
-	// 			memset(Chat::chatrms[i].usrs[j].room,NULL,sizeof(Chat::chatrms[i].usrs[j].room));
-	// 			Chat::chatrms[i].usrs[j].chatting = false;
-	// 			Chat::chatrms[i].usrs[j].erase();
-	// 			char* bye = "GOODBYE";
-	// 			send_message(connfd, bye);
-	// 			return 1;
-	// 		}
-	// 	}
-	// }
-	// return -1;
 }
+
 
 
 int who(User* usr){
 	int connfd = usr->getCon();
-
-	//list through chatrooms to check users
-	// for(size_t i=0; i<Chat::chatrms.size(); i++){
-	// 	vector<User*> usrLst = Chat::chatrms[i]->getUsrLst();
-	// 	for(auto vector<User*>::iterator user = usrLst.begin(); user != usrLst.end(); user++){
-	// 		//if connfd matches for user
-	// 		if(*user->getCon() == connfd){
-	// 			for(size_t k = 0; k<Chat::chatrms[i]->getUsrLst().size(); k++){
-	// 				send_message(connfd, (Chat::chatrms[i]->getUsrLst()[k])->.nickname);
-	// 			}
-	// 			return 1;
-	// 		}
-	// 	}
-	// }
-	return -1;
+	Chatroom* rum = usr->getChatrm();
+	if(rum == NULL) return -1;
+	vector<User*> usrs = rum->getUsrLst();
+	for(size_t i=0; i<usrs.size(); i++){
+		send_message(connfd, usrs[i]->getName());
+	}
+	return 1;
 }
 
 
 int help(User* usr){
 	int connfd = usr->getCon();
-	send_message(connfd, "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\nickname message (Private message)\n'message' (Group Message)");
+	char* buf = (char*) "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\nickname message (Private message)\n'message' (Group Message)";
+	send_message(connfd, buf);
 	return 1;
 }
 

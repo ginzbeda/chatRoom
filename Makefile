@@ -5,11 +5,12 @@ CXXFLAGS += -g -pthread -Wall
 MKDIR_P = mkdir -p
 OBJ_DIR = obj
 
-# TARGET = main server
+
 
 main : obj/main.o obj/server.o obj/connection.o obj/chat.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
-
+submission:
+	zip -r chatRoom-submission.zip src
 # main.o : main.cpp server.h
 # 	$(CXX) $(CXXFLAGS) -c main.cpp
 
@@ -36,6 +37,6 @@ obj/%.o: src/%.cpp ${OBJ_DIR}
 
 clean:
 	# rm -f main malloc_tests test_detail.xml
-	# rm -rf obj
-	# rm -f *~ obj/*.o obj/*.a *.zip
+	rm -rf obj
+	rm -f *~ obj/*.o obj/*.a *.zip
 	rm main *.o
