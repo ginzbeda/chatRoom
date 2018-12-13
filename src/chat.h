@@ -7,23 +7,6 @@
 using namespace std;
 
 
-
-typedef struct user {
-	char nickname[16];
-	int connfd;
-	char room[25];
-	bool chatting;
-}user;
-
-typedef struct chatroom {
-	vector <user> usrs;
-	char name[25];
-}chatroom;
-
-
-
-user createUsr(char name[16], sockaddr_in* sockAdr);
-int chattr(user *change);
 int join(char *name, char *room, int connfd);
 int rooms(int connfd);
 int leave(int connfd);
@@ -31,8 +14,60 @@ int who(int connfd);
 int help(int connfd);
 int mess(char name[25], char msg[MAXLINE], int connfd);
 
+
+class User {
+public:
+	char nickname[16];
+	int connfd;
+	Chatroom *room;
+	static void User(int fd, char *name){
+		connfd = fd;
+		strncpy(nickname, name, strlen(name));
+	}
+
+	static void setChatrm(Chatroom *rum){
+		room = rum;
+	}
+	static Chatroom *getChatrm(){
+		return room;
+	}
+	static void namer(char name){
+		nickname = name;
+	}
+	static void getName(){
+		return nickname;
+	}
+	static int getCon(){
+		return connfd;
+	}
+};
+
+class Chatroom {
+public:
+	vector <User *> usrs;
+	char name[25];
+
+	static void createChatrm(char* nm){
+		strncpy(name, nm, 25);
+	}
+
+	static void addUsr(User *usr){
+		usrs.push_back(usr);
+	}
+	static vector<User *> getUsrLst(){
+		return usrs;
+	}
+
+	static char *getNm(){
+		return (char *) name;
+	}
+};
+
+
+
 class Chat {
 public:
-	static vector<chatroom> chatrms;
-	static vector<user> usrs;
+	static vector<Chatroom *> chatrms;
 };
+
+

@@ -1,8 +1,7 @@
 #include "chat.h"
 #include "connection.h"
 
-vector<chatroom> Chat::chatrms;
-
+vector<Chatroom *> Chat::chatrms;
 
 //must change user to chatting if return 1
 // user createUsr(char name[16],  sockaddr_in *server_addr, int connfd){
@@ -13,36 +12,24 @@ vector<chatroom> Chat::chatrms;
 // 	return born;
 // }
 
-int chattr(user *change, int connfd){
-	change->chatting = true;
-	return 1;
-}
 
 int join(char *name, char *room, int connfd){
-	user nuser;
-	strncpy(nuser.nickname,name,sizeof(nuser.nickname));
-	nuser.connfd = connfd;
-	nuser.chatting = true;
-	for(int i=0; i<Chat::chatrms.size(); i++){
-		if(strncmp(Chat::chatrms[i].name,room, sizeof(Chat::chatrms[i].name)) == 0) // comparing char *
-		{
-			user nuser;
-			nuser.nickname = name
-			nuser.chatting = true;
-			Chat::chatrms[i].usrs.push_back(nuser);
+	User nUser = new User(connfd, name);
+	for(size_t i = 0; i< Chat::chatrms.length(), i++){
+		if(strncmp(Chat::chatrms[i]->getNm(), room, sizeof(Chat::chatrms[i]->getNm()))==0){
+			Chat::chatrms[i]->addUsr(nUser);
 		}
-		return 1;
 	}
-	chatroom new_room;
-	strncpy(new_room.name,room,sizeof(new_room.name));
-	new_room.usrs.push_back(nuser);
+	Chatroom new_room = new Chatroom(room);
+	new_room.addUsr(nUser);
 	Chat::chatrms.push_back(new_room);
 	return 1;
 }
+
 int rooms(int connfd){
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
-			send_message(connfd, Chat::chatrms[i].name);
+			send_message(connfd, Chat::chatrms[i].getNm());
 		}
 		return 1;
 	}
@@ -53,10 +40,11 @@ int leave(int connfd){
 		for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
 			if(Chat::chatrms[i].usrs[j].connfd == connfd){
 				//MIGHT CAUSE PROBLEM
-				memset(Chat::chatrms[i].usrs[j].room,'0',sizeof(Chat::chatrms[i].usrs[j].room));
+				memset(Chat::chatrms[i].usrs[j].room,NULL,sizeof(Chat::chatrms[i].usrs[j].room));
 				Chat::chatrms[i].usrs[j].chatting = false;
 				Chat::chatrms[i].usrs[j].erase();
-				send_message(connfd, "GOODBYE");
+				char* bye = "GOODBYE";
+				send_message(connfd, bye);
 				return 1;
 			}
 		}
@@ -71,8 +59,6 @@ int who(int connfd){
 		for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
 			//if connfd matches for user
 			if(Chat::chatrms[i].usrs[j].connfd == connfd){
-				//MIGHT CAUSE PROBLEM
-				//
 				for(size_t k = 0; k<Chat::chatrms[i].usrs.size(); k++){
 					send_message(connfd, Chat::chatrms[i].usrs[k].nickname);
 				}
