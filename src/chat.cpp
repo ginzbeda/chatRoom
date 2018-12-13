@@ -6,24 +6,24 @@ vector<Chatroom*> Chat::chatrms;
 
 int join(char *name, char *room, int connfd){
 	//Creates new User
-	User nUser = new User(connfd, name);
+	User* nUser = new User(connfd, name);
 	//Searches for chatroom
-	for(size_t i = 0; i< Chat::chatrms.length(), i++){
+	for(size_t i = 0; i< Chat::chatrms.size(); i++){
 		//If found
-		if(strncmp(Chat::chatrms[i].name, room, sizeof(Chat::chatrms[i].name))==0){
+		if(strncmp(Chat::chatrms[i]->name, room, sizeof(Chat::chatrms[i]->name))==0){
 			//Adds user to room
-			Chat::chatrms[i].addUsr(nUser);
+			Chat::chatrms[i]->addUsr(nUser);
 			//Assigns user to room
-			nUser.room= Chat:;chatrms[i];
+			nUser->setChatrm(Chat::chatrms[i]);
 			return 1;
 		}
 	}
 	//Room not found create room
-	Chatrmoom rum = new Chatroom(room);
+	Chatroom* rum = new Chatroom(room);
 	//Add user to room list
-	rum.getUsrLst().push_back(nUser);
+	rum->addUsr(nUser);
 	//Assign user to room
-	nUser.room = rum;
+	nUser->setChatrm(rum);
 	//Add room to rooms
 	Chat::chatrms.push_back(rum);
 	return 2;
@@ -31,7 +31,7 @@ int join(char *name, char *room, int connfd){
 int rooms(int connfd){
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
-			send_message(connfd, Chat::chatrms[i].name);
+			send_message(connfd, Chat::chatrms[i]->name);
 		}
 		return 1;
 	}
