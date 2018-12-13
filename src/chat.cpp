@@ -4,9 +4,9 @@
 vector<Chatroom*> Chat::chatrms;
 
 
-int join(char *name, char *room, int connfd){
+int join(char *name, char *room, User* nUser){
 	//Creates new User
-	User* nUser = new User(connfd, name);
+	connfd = nUser->getCon();
 	//Searches for chatroom
 	for(size_t i = 0; i< Chat::chatrms.size(); i++){
 		//If found
@@ -28,7 +28,8 @@ int join(char *name, char *room, int connfd){
 	Chat::chatrms.push_back(rum);
 	return 2;
 }
-int rooms(int connfd){
+int rooms(User* usr){
+	int connfd = usr->getCon();
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
 			send_message(connfd, Chat::chatrms[i]->name);
@@ -37,30 +38,48 @@ int rooms(int connfd){
 	}
 	return -1;
 }
-int leave(int connfd){
-	for(size_t i=0; i<Chat::chatrms.size(); i++){
-		for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
-			if(Chat::chatrms[i].usrs[j].connfd == connfd){
-				//MIGHT CAUSE PROBLEM
-				memset(Chat::chatrms[i].usrs[j].room,NULL,sizeof(Chat::chatrms[i].usrs[j].room));
-				Chat::chatrms[i].usrs[j].chatting = false;
-				Chat::chatrms[i].usrs[j].erase();
-				char* bye = "GOODBYE";
-				send_message(connfd, bye);
-				return 1;
-			}
+int leave(User* usr){
+	int connfd = usr->getCon();
+	Chatroom* rum =  usr->getChatrm();
+	vector <User*> usrs = rum->getUsrLst();
+
+	for(auto user = usrs.begin(); user != usrs.end(); user++){
+		if(*usr == *user){
+			rum = NULL;
+			usrs.erase(user);
+			char* bye = "GOODBYE";
+			send_message(connfd, bye);
+			return 1;
 		}
 	}
 	return -1;
+
+	// for(size_t i=0; i<Chat::chatrms.size(); i++){
+	// 	for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
+	// 		if(Chat::chatrms[i].usrs[j].connfd == connfd){
+	// 			//MIGHT CAUSE PROBLEM
+	// 			memset(Chat::chatrms[i].usrs[j].room,NULL,sizeof(Chat::chatrms[i].usrs[j].room));
+	// 			Chat::chatrms[i].usrs[j].chatting = false;
+	// 			Chat::chatrms[i].usrs[j].erase();
+	// 			char* bye = "GOODBYE";
+	// 			send_message(connfd, bye);
+	// 			return 1;
+	// 		}
+	// 	}
+	// }
+	// return -1;
 }
 
 
-int who(int connfd){
+int who(User* usr){
+	int connfd = usr->getCon();
+
 	//list through chatrooms to check users
 	for(size_t i=0; i<Chat::chatrms.size(); i++){
-		for(size_t j =0; j<Chat::chatrms[i].usrs.size(); j++){
+		vector<User*> usrLst = Chat::chatrms[i]->getUsrLst();
+		for(auto user = usrLst.begin(); user != usrLst.end(); user++){
 			//if connfd matches for user
-			if(Chat::chatrms[i].usrs[j].connfd == connfd){
+			if(user->getCon() == connfd){
 				for(size_t k = 0; k<Chat::chatrms[i].usrs.size(); k++){
 					send_message(connfd, Chat::chatrms[i].usrs[k].nickname);
 				}
@@ -72,13 +91,14 @@ int who(int connfd){
 }
 
 
-int help(int connfd){
+int help(User* usr){
+	int connfd = usr->getCon();
 	send_message(connfd, "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\nickname message (Private message)\n'message' (Group Message)");
 	return 1;
 }
 
 
-int mess(char name[25], char msg[MAXLINE], int connfd)
+int mess(char name[25], char msg[MAXLINE], User* usr)
 {
 	for(int i=0; i<Chat::chatrms.size(); i++)
 	{

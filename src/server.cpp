@@ -48,6 +48,7 @@ void *thread(void *vargp) {
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
   free(vargp);
+  User* nUser = new User(connfd,(char*) NULL);
   //input
   char buff[MAXLINE];
   //token holder
@@ -68,18 +69,18 @@ void *thread(void *vargp) {
   	//check first token for commands
 
   	if(strcmp(args[0], "\\JOIN")){
-        join(args[1], args[2], connfd);
+        join(args[1], args[2], nUser);
     }else if (strcmp(args[0], "\\ROOMS") == 0){
-		  rooms(connfd);
+		  rooms(nUser);
 	   }
 	else if(strcmp(args[0], "\\LEAVE") == 0){
-		leave(connfd);
+		leave(nUser);
     }
     else if(strcmp(args[0], "\\WHO") == 0){
-    	who(connfd);
+    	who(nUser);
     }
     else if(strcmp(args[0], "\\HELP") == 0){
-    	help(connfd);
+    	help(nUser);
     }
  //    else if( condition for nickname and message ){
  //      //send message to nickname from sender
