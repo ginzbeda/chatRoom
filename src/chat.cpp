@@ -6,26 +6,38 @@ vector<Chatroom*> Chat::chatrms;
 
 int join(char *name, char *room, User* nUser){
 	//Creates new set name and room of user
+	cout<<"1"<<endl;
 	nUser->namer(name);
 	//Searches for chatroom
+		cout<<"2"<<endl;
 	for(size_t i = 0; i< Chat::chatrms.size(); i++){
 		//If found
+			cout<<"3"<<endl;
 		if(strncmp(Chat::chatrms[i]->name, room, sizeof(Chat::chatrms[i]->name))==0){
 			//Adds user to room
+				cout<<"4"<<endl;
 			Chat::chatrms[i]->addUsr(nUser);
 			//Assigns user to room
 			nUser->setChatrm(Chat::chatrms[i]);
+			char* buf = (char*) "User Joined Room";
+			send_message(nUser->getCon(), buf);
 			return 1;
 		}
 	}
 	//Room not found create room
+		cout<<"5"<<endl;
 	Chatroom* rum = new Chatroom(room);
 	//Add user to room list
+		cout<<"6"<<endl;
 	rum->addUsr(nUser);
 	//Assign user to room
+		cout<<"7"<<endl;
 	nUser->setChatrm(rum);
 	//Add room to rooms
+		cout<<"8"<<endl;
 	Chat::chatrms.push_back(rum);
+	char* buf = (char*) "User Created & Joined Room";
+	send_message(nUser->getCon(), buf);
 	return 2;
 }
 int rooms(User* usr){
@@ -70,7 +82,7 @@ int who(User* usr){
 
 int help(User* usr){
 	int connfd = usr->getCon();
-	char* buf = (char*) "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\nickname message (Private message)\n'message' (Group Message)";
+	char* buf = (char*) "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\\nickname message (Private message)\n'message' (Group Message)";
 	send_message(connfd, buf);
 	return 1;
 }

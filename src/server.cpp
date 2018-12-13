@@ -48,7 +48,7 @@ void *thread(void *vargp) {
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
   free(vargp);
-  User* nUser = new User(connfd,(char*) NULL);
+  User* nUser = new User(connfd);
   //input
   char buff[MAXLINE];
   //token holder
@@ -67,12 +67,14 @@ void *thread(void *vargp) {
   		cout<<args[i] <<endl;
   	}
   	//check first token for commands
-
-  	if(strcmp(args[0], "\\JOIN")){
+  	if(strcmp(args[0], "\\JOIN")==0){
+  		cout << "entered"<< endl;
         join(args[1], args[2], nUser);
-    }else if (strcmp(args[0], "\\ROOMS") == 0){
+        cout << "entered2"<< endl;
+    }
+    else if (strcmp(args[0], "\\ROOMS") == 0){
 		  rooms(nUser);
-	   }
+	}
 	else if(strcmp(args[0], "\\LEAVE") == 0){
 		leave(nUser);
     }

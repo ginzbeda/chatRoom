@@ -24,9 +24,8 @@ public:
 	int connfd;
 	Chatroom *room;
 	
-	User(int fd, char *name){
+	User(int fd){
 		connfd = fd;
-		strncpy(nickname, name, 16);
 	}
 
 	void setChatrm(Chatroom *rum){
@@ -63,7 +62,7 @@ public:
 	}
 
 	void rmUsr(){
-		
+
 	}
 
 	char* getNm(){
