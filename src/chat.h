@@ -6,14 +6,7 @@
 
 using namespace std;
 
-struct chatroom;
 
-
-
-
-
-user createUsr(char name[16], sockaddr_in* sockAdr);
-int chattr(user *change);
 int join(char *name, char *room, int connfd);
 int rooms(int connfd);
 int leave(int connfd);
@@ -24,15 +17,15 @@ int mess(char name[25], char msg[MAXLINE], int connfd);
 class Chat {
 public:
 	static vector<chatroom*> chatrms;
-	static vector<user*> usrs;
 };
 class User {
 public:
 	char nickname[16];
 	int connfd;
 	chatroom *room;
-	static void createUsr(int fd){
+	static void User(int fd, char *name){
 		connfd = fd;
+		strncpy(nickname, name, strlen(name));
 	}
 
 	static void setChatrm(chatroom *rum){
@@ -54,7 +47,7 @@ public:
 
 class Chatroom {
 public:
-	vector <user*> usrs;
+	vector <User*> usrs;
 	char name[25];
 
 	static void createChatrm(char* nm){

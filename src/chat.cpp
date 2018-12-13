@@ -13,12 +13,15 @@ vector<chatroom> Chat::chatrms;
 // 	return born;
 // }
 
-int chattr(user *change, int connfd){
-	change->chatting = true;
-	return 1;
-}
 
 int join(char *name, char *room, int connfd){
+	User nUser = new User(connfd, name);
+	for(size_t i = 0; i< Chat::chatrms.length(), i++){
+		if(strncmp(Chat::chatrms[i].name, room, sizeof(Chat::chatrms[i].name))==0){
+			(User*) nUser
+		}
+	}
+
 	user nuser;
 	strncpy(nuser.nickname,name,sizeof(nuser.nickname));
 	nuser.connfd = connfd;
