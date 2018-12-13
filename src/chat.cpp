@@ -19,9 +19,15 @@ int chattr(user *change, int connfd){
 }
 
 int join(char *name, char *room, int connfd){
-	// for(int i=0; i<Chat::chatrms.size(); i++){
-	// 	if()
-	// }
+	for(int i=0; i<Chat::chatrms.size(); i++){
+		if(strncmp(chatrms[i].name,room, sizeof(chatrms[i].name)) == 0) // comparing char *
+		{
+			user nuser;
+			nuser.nickname = name
+			nuser.chatting = true;
+			chatrms[i].usrs.push_back(nuser);
+		}
+	}
 	return 1;
 }
 int rooms(int connfd){
@@ -36,7 +42,10 @@ int rooms(int connfd){
 	}
 	return -1;
 }
-int leave(int connfd);
+int leave(int connfd)
+{
+
+}
 int who(int connfd);
 int help(int connfd);
 int mess(char name[25], char msg[MAXLINE], int connfd);
