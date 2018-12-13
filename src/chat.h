@@ -5,8 +5,11 @@
 #define MAXLINE 8192
 
 using namespace std;
+class User;
+class Chatroom;
+class Chat;
 
-
+//Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
 int join(char *name, char *room, int connfd);
 int rooms(int connfd);
 int leave(int connfd);
@@ -20,9 +23,10 @@ public:
 	char nickname[16];
 	int connfd;
 	Chatroom *room;
-	static void User(int fd, char *name){
+	
+	User(int fd, char *name){
 		connfd = fd;
-		strncpy(nickname, name, strlen(name));
+		strncpy(nickname, name, 16);
 	}
 
 	static void setChatrm(Chatroom *rum){
@@ -31,13 +35,13 @@ public:
 	static Chatroom *getChatrm(){
 		return room;
 	}
-	static void namer(char name){
-		nickname = name;
+	void namer(char* name){
+		strncpy(nickname, name, 16);
 	}
-	static void getName(){
+	char* getName(){
 		return nickname;
 	}
-	static int getCon(){
+	int getCon(){
 		return connfd;
 	}
 };
@@ -47,7 +51,7 @@ public:
 	vector <User *> usrs;
 	char name[25];
 
-	static void createChatrm(char* nm){
+	Chatroom(char* nm){
 		strncpy(name, nm, 25);
 	}
 
@@ -69,5 +73,3 @@ class Chat {
 public:
 	static vector<Chatroom *> chatrms;
 };
-
-

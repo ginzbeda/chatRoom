@@ -3,9 +3,6 @@
 #include "connection.h"
 
 char message_buf[512];
-vector<user> usrs;
-
-
 
 void init_message_buf(){
 	for(size_t i = 0; i<strlen(message_buf); i++){
