@@ -1,6 +1,8 @@
 #include "chat.h"
 #include "connection.h"
 
+vector<chatroom> Chat::chatrms;
+
 
 //must change user to chatting if return 1
 user createUsr(char name[16],  sockaddr_in *server_addr, int connfd){
@@ -31,9 +33,12 @@ int join(char *name, char *room, int connfd){
 int rooms(int connfd){
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
-			send_message(connfd, Chat::chatrms[i]);
+			send_message(connfd, Chat::chatrms[i].name);
 		}
 		return 1;
+	}
+	else{
+		cout<< "it works" << endl;
 	}
 	return -1;
 }

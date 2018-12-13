@@ -69,6 +69,7 @@ void *thread(void *vargp) {
   		cout<<args[i] <<endl;
   	}
   	//check first token for commands
+
   	if(strcmp(args[0], "\\JOIN")){
         join(args[1], args[2], connfd);
     }else if (strcmp(args[0], "\\ROOMS") == 0){
