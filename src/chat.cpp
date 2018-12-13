@@ -48,10 +48,17 @@ int rooms(int connfd){
 	}
 	return -1;
 }
-int leave(int connfd)
-{
-	
+int leave(int connfd);
+
+int who(int connfd){
+ return 0;
 }
-int who(int connfd);
-int help(int connfd);
+int help(int connfd){
+	char buff[] = "The following commands are available :-\n \\JOIN\n \\ROOMS\n \\WHO\n \\LEAVE\n \\nickname message\n";
+	send_message(connfd,(char *)buff);
+	return 1;
+}
 int mess(char name[25], char msg[MAXLINE], int connfd);
+
+
+
