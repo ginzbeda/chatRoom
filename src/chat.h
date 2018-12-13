@@ -10,12 +10,12 @@ class Chatroom;
 class Chat;
 
 //Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
-int join(char *name, char *room, int connfd);
-int rooms(int connfd);
-int leave(int connfd);
-int who(int connfd);
-int help(int connfd);
-int mess(char name[25], char msg[MAXLINE], int connfd);
+int join(char *name, char *room, User* usr);
+int rooms(User* usr);
+int leave(User* usr);
+int who(User* usr);
+int help(User* usr);
+int mess(char name[25], char msg[MAXLINE], User* usr);
 
 
 class User {
@@ -60,6 +60,10 @@ public:
 	}
 	vector<User*> getUsrLst(){
 		return usrs;
+	}
+
+	void rmUsr(){
+		
 	}
 
 	char* getNm(){

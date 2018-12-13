@@ -5,8 +5,8 @@ vector<Chatroom*> Chat::chatrms;
 
 
 int join(char *name, char *room, User* nUser){
-	//Creates new User
-	connfd = nUser->getCon();
+	//Creates new set name and room of user
+	nUser->namer(name);
 	//Searches for chatroom
 	for(size_t i = 0; i< Chat::chatrms.size(); i++){
 		//If found
@@ -43,8 +43,8 @@ int leave(User* usr){
 	Chatroom* rum =  usr->getChatrm();
 	vector <User*> usrs = rum->getUsrLst();
 
-	for(auto user = usrs.begin(); user != usrs.end(); user++){
-		if(*usr == *user){
+	for(auto vector<User*>::iterator user = usrs.begin(); user != usrs.end(); user++){
+		if(usr->getCon()==(*user)->getCon()){
 			rum = NULL;
 			usrs.erase(user);
 			char* bye = "GOODBYE";
@@ -75,18 +75,18 @@ int who(User* usr){
 	int connfd = usr->getCon();
 
 	//list through chatrooms to check users
-	for(size_t i=0; i<Chat::chatrms.size(); i++){
-		vector<User*> usrLst = Chat::chatrms[i]->getUsrLst();
-		for(auto user = usrLst.begin(); user != usrLst.end(); user++){
-			//if connfd matches for user
-			if(user->getCon() == connfd){
-				for(size_t k = 0; k<Chat::chatrms[i].usrs.size(); k++){
-					send_message(connfd, Chat::chatrms[i].usrs[k].nickname);
-				}
-				return 1;
-			}
-		}
-	}
+	// for(size_t i=0; i<Chat::chatrms.size(); i++){
+	// 	vector<User*> usrLst = Chat::chatrms[i]->getUsrLst();
+	// 	for(auto vector<User*>::iterator user = usrLst.begin(); user != usrLst.end(); user++){
+	// 		//if connfd matches for user
+	// 		if(*user->getCon() == connfd){
+	// 			for(size_t k = 0; k<Chat::chatrms[i]->getUsrLst().size(); k++){
+	// 				send_message(connfd, (Chat::chatrms[i]->getUsrLst()[k])->.nickname);
+	// 			}
+	// 			return 1;
+	// 		}
+	// 	}
+	// }
 	return -1;
 }
 
@@ -100,18 +100,18 @@ int help(User* usr){
 
 int mess(char name[25], char msg[MAXLINE], User* usr)
 {
-	for(int i=0; i<Chat::chatrms.size(); i++)
-	{
-		for(int j=0; j<Chat::chatrms[i].usrs.size(); j++)
-		{
-			if(strncmp((char *)name,Chat::chatrms[i].usrs[j].nickname,16) == 0)
-			{
-				send_message(Chat::chatrms[i].usrs[j].connfd,(char *)msg);
-				send_message(connfd,(char *)msg);
-				return 1;
-			}
-		}
-	}
+// 	for(int i=0; i<Chat::chatrms.size(); i++)
+// 	{
+// 		for(int j=0; j<Chat::chatrms[i].usrs.size(); j++)
+// 		{
+// 			if(strncmp((char *)name,Chat::chatrms[i].usrs[j].nickname,16) == 0)
+// 			{
+// 				send_message(Chat::chatrms[i].usrs[j].connfd,(char *)msg);
+// 				send_message(connfd,(char *)msg);
+// 				return 1;
+// 			}
+// 		}
+// 	}
 	return -1;
 }
 
