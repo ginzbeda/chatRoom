@@ -61,10 +61,6 @@ public:
 		return usrs;
 	}
 
-	void rmUsr(){
-
-	}
-
 	char* getNm(){
 		return (char*) name;
 	}

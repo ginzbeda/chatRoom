@@ -5,40 +5,71 @@ vector<Chatroom*> Chat::chatrms;
 
 
 int join(char *name, char *room, User* nUser){
+	char* buf;
+	cout<< "1" <<endl;
 	//Creates new set name and room of user
-	cout<<"1"<<endl;
-	nUser->namer(name);
-	//Searches for chatroom
-		cout<<"2"<<endl;
-	for(size_t i = 0; i< Chat::chatrms.size(); i++){
-		//If found
-			cout<<"3"<<endl;
-		if(strncmp(Chat::chatrms[i]->name, room, sizeof(Chat::chatrms[i]->name))==0){
-			//Adds user to room
-				cout<<"4"<<endl;
-			Chat::chatrms[i]->addUsr(nUser);
-			//Assigns user to room
-			nUser->setChatrm(Chat::chatrms[i]);
-			char* buf = (char*) "User Joined Room";
-			send_message(nUser->getCon(), buf);
-			return 1;
-		}
+	if(strncmp(nUser->getName(),"",16)==0){
+		nUser->namer(name);
 	}
-	//Room not found create room
-		cout<<"5"<<endl;
-	Chatroom* rum = new Chatroom(room);
-	//Add user to room list
-		cout<<"6"<<endl;
-	rum->addUsr(nUser);
-	//Assign user to room
-		cout<<"7"<<endl;
-	nUser->setChatrm(rum);
-	//Add room to rooms
-		cout<<"8"<<endl;
-	Chat::chatrms.push_back(rum);
-	char* buf = (char*) "User Created & Joined Room";
-	send_message(nUser->getCon(), buf);
-	return 2;
+		cout<< "name: "<<nUser->getName()<<endl;
+		//THIS IS THE PART
+		// cout << "rooms= "<< strcmp((nUser->getChatrm())->getNm(), room)<< endl;
+		cout<< "name1: "<<(nUser->getChatrm())<<endl;
+	// if(strncmp(nUser->getChatrm()->getNm(), room, )!=0){
+		if(nUser->getChatrm()!=0){
+			nUser->setChatrm(0);
+			cout<< "name2: "<<(nUser->getChatrm())<<endl;
+		}
+
+		
+		cout<< "2" <<endl;
+		//Searches for chatroom
+		for(size_t i = 0; i< Chat::chatrms.size(); i++){
+			cout<< "3" <<endl;
+			//If found
+			if(strncmp(Chat::chatrms[i]->name, room, sizeof(Chat::chatrms[i]->name))==0){
+				cout<< "4" <<endl;
+				// cout<<"Room: " << (nUser->getChatrm()!=NULL)<< endl;
+				//Adds user to room
+				Chat::chatrms[i]->addUsr(nUser);
+				cout<< "5" <<endl;
+				//Assigns user to room
+				nUser->setChatrm(Chat::chatrms[i]);
+				cout<< "6" <<endl;
+				buf = (char*) "User Joined Room";
+				cout<< "7" <<endl;
+				send_message(nUser->getCon(), buf);
+				// strncpy(buf, "", strlen(buf));
+				cout<< "9" <<endl;
+				return 1;
+			}
+		}
+		//Room not found create room
+		Chatroom* rum = new Chatroom(room);
+		cout<< "10" <<endl;
+		//Add user to room list
+		rum->addUsr(nUser);
+		cout<< "11" <<endl;
+		//Assign user to room
+		nUser->setChatrm(rum);
+		cout<< "12" <<endl;
+		//Add room to rooms
+		Chat::chatrms.push_back(rum);
+		cout<< "13" <<endl;
+		buf = (char*) "User Created & Joined Room";
+		cout<< "14" <<endl;
+		send_message(nUser->getCon(), buf);
+		cout<< "15" <<endl;
+		// strncpy(buf, "", strlen(buf));
+		cout<< "16" <<endl;
+		return 2;
+	// }
+	
+// else{
+// 		buf = (char*) "Already in Room";
+// 		send_message(nUser->getCon(), buf);
+// 		return -1;
+// 	}
 }
 int rooms(User* usr){
 	int connfd = usr->getCon();
