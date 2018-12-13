@@ -1,17 +1,7 @@
 #include "chat.h"
 #include "connection.h"
 
-vector<*chatroom> Chat::chatrms;
-
-
-//must change user to chatting if return 1
-// user createUsr(char name[16],  sockaddr_in *server_addr, int connfd){
-// 	user born;
-// 	strncpy(born.nickname, name, strlen(name));
-// 	born.server_addr = server_addr;
-// 	born.chatting = false;
-// 	return born;
-// }
+vector<Chatroom*> Chat::chatrms;
 
 
 int join(char *name, char *room, int connfd){
