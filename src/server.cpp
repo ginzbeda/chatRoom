@@ -73,8 +73,8 @@ void *thread(void *vargp) {
   	if(strcmp(args[0], "\\JOIN")){
         join(args[1], args[2], connfd);
     }else if (strcmp(args[0], "\\ROOMS") == 0){
-		rooms(connfd);
-	}
+		  rooms(connfd);
+	   }
 	// else if(strcmp(args[0], "\\LEAVE") == 0){
 
  //    }
@@ -94,7 +94,7 @@ void *thread(void *vargp) {
  // 	else{
  //      //send message to every connected client
  //    }
-  	
+  	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!
   close(connfd);

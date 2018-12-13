@@ -10,7 +10,7 @@ using namespace std;
 
 typedef struct user {
 	char nickname[16];
-	sockaddr_in *server_addr;
+	int connfd;
 	bool chatting;
 }user;
 

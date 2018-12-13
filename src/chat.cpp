@@ -19,15 +19,21 @@ int chattr(user *change, int connfd){
 }
 
 int join(char *name, char *room, int connfd){
+	user nuser;
+	strncpy(nuser.nickname,name,sizeof(nuser.nickname));
+	nuser.connfd = connfd;
+	nuser.chatting = true;
 	for(int i=0; i<Chat::chatrms.size(); i++){
-		if(strncmp(chatrms[i].name,room, sizeof(chatrms[i].name)) == 0) // comparing char *
+		if(strncmp(Chat::chatrms[i].name,room, sizeof(Chat::chatrms[i].name)) == 0) // comparing char *
 		{
-			user nuser;
-			nuser.nickname = name
-			nuser.chatting = true;
-			chatrms[i].usrs.push_back(nuser);
+			Chat::chatrms[i].usrs.push_back(nuser);
 		}
+		return 1;
 	}
+	chatroom new_room;
+	strncpy(new_room.name,room,sizeof(new_room.name));
+	new_room.usrs.push_back(nuser);
+	Chat::chatrms.push_back(new_room);
 	return 1;
 }
 int rooms(int connfd){
