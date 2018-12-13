@@ -85,9 +85,7 @@ int who(int connfd){
 
 
 int help(int connfd){
-	send_message(connfd, "\\JOIN nickname room (Join room)\n
-		\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n
-		\\HELP (List commands)\n\\nickname message (Private message)\n'message' (Group Message)");
+	send_message(connfd, "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\\nickname message (Private message)\n'message' (Group Message)");
 	return 1;
 }
 

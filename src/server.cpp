@@ -84,16 +84,16 @@ void *thread(void *vargp) {
     else if(strcmp(args[0], "\\HELP") == 0){
     	help(connfd);
     }
- //    else if( condition for nickname and message ){
- //      //send message to nickname from sender
- //    }
+    else if(strcmp(args[0], ) == 0){
+      mess(args[0],args[1],connfd);
+    }
     
- //    else if(/* condition for incorrect command*/){
- //      //print error message
- // 	}
- // 	else{
- //      //send message to every connected client
- //    }
+    else if(/* condition for incorrect command*/){
+      //print error message
+ 	}
+ 	else{
+      //send message to every connected client
+    }
   	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!
