@@ -23,12 +23,12 @@ typedef struct chatroom {
 
 user createUsr(char name[16], sockaddr_in* sockAdr);
 int chattr(user *change);
-int join(char *name, char *room);
-int rooms();
-int leave();
-int who();
-int help();
-int mess(char name[25], char msg[MAXLINE]);
+int join(char *name, char *room, int connfd);
+int rooms(int connfd);
+int leave(int connfd);
+int who(int connfd);
+int help(int connfd);
+int mess(char name[25], char msg[MAXLINE], int connfd);
 
 class Chat {
 public:
