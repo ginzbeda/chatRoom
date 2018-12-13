@@ -11,10 +11,7 @@ using namespace std;
 typedef struct user {
 	char nickname[16];
 	int connfd;
-<<<<<<< HEAD
 	char room[25];
-=======
->>>>>>> 842d6cb7f5bfb1f249ce89523e83b4099061b120
 	bool chatting;
 }user;
 
