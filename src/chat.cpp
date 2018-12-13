@@ -1,7 +1,7 @@
 #include "chat.h"
 #include "connection.h"
 
-vector<chatroom> Chat::chatrms;
+vector<*chatroom> Chat::chatrms;
 
 
 //must change user to chatting if return 1
@@ -15,32 +15,28 @@ vector<chatroom> Chat::chatrms;
 
 
 int join(char *name, char *room, int connfd){
+	//Creates new User
 	User nUser = new User(connfd, name);
+	//Searches for chatroom
 	for(size_t i = 0; i< Chat::chatrms.length(), i++){
+		//If found
 		if(strncmp(Chat::chatrms[i].name, room, sizeof(Chat::chatrms[i].name))==0){
-			(User*) nUser
+			//Adds user to room
+			Chat::chatrms[i].addUsr(nUser);
+			//Assigns user to room
+			nUser.room= Chat:;chatrms[i];
+			return 1;
 		}
 	}
-
-	user nuser;
-	strncpy(nuser.nickname,name,sizeof(nuser.nickname));
-	nuser.connfd = connfd;
-	nuser.chatting = true;
-	for(int i=0; i<Chat::chatrms.size(); i++){
-		if(strncmp(Chat::chatrms[i].name,room, sizeof(Chat::chatrms[i].name)) == 0) // comparing char *
-		{
-			user nuser;
-			nuser.nickname = name;
-			nuser.chatting = true;
-			Chat::chatrms[i].usrs.push_back(nuser);
-		}
-		return 1;
-	}
-	chatroom new_room;
-	strncpy(new_room.name,room,sizeof(new_room.name));
-	new_room.usrs.push_back(nuser);
-	Chat::chatrms.push_back(new_room);
-	return 1;
+	//Room not found create room
+	Chatrmoom rum = new Chatroom(room);
+	//Add user to room list
+	rum.getUsrLst().push_back(nUser);
+	//Assign user to room
+	nUser.room = rum;
+	//Add room to rooms
+	Chat::chatrms.push_back(rum);
+	return 2;
 }
 int rooms(int connfd){
 	if(Chat::chatrms.size()>0){

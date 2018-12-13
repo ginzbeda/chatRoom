@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+//Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
 int join(char *name, char *room, int connfd);
 int rooms(int connfd);
 int leave(int connfd);
@@ -50,7 +50,7 @@ public:
 	vector <User*> usrs;
 	char name[25];
 
-	static void createChatrm(char* nm){
+	static void Chatroom(char* nm){
 		strncpy(name, nm, 25);
 	}
 
