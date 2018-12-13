@@ -65,7 +65,6 @@ int leave(int connfd){
 	return -1;
 }
 
-int leave(int connfd);
 
 int who(int connfd){
 	//list through chatrooms to check users
@@ -82,11 +81,30 @@ int who(int connfd){
 	}
 	return -1;
 }
+
+
 int help(int connfd){
 	send_message(connfd, "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\nickname message (Private message)\n'message' (Group Message)");
 	return 1;
 }
-int mess(char name[25], char msg[MAXLINE], int connfd);
+
+
+int mess(char name[25], char msg[MAXLINE], int connfd)
+{
+	for(int i=0; i<Chat::chatrms.size(); i++)
+	{
+		for(int j=0; j<Chat::chatrms[i].usrs.size(); j++)
+		{
+			if(strncmp((char *)name,Chat::chatrms[i].usrs[j].nickname,16) == 0)
+			{
+				send_message(Chat::chatrms[i].usrs[j].connfd,(char *)msg);
+				send_message(connfd,(char *)msg);
+				return 1;
+			}
+		}
+	}
+	return -1;
+}
 
 
 
