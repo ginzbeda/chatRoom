@@ -75,15 +75,15 @@ void *thread(void *vargp) {
     }else if (strcmp(args[0], "\\ROOMS") == 0){
 		  rooms(connfd);
 	   }
-	// else if(strcmp(args[0], "\\LEAVE") == 0){
-
- //    }
- //    else if(strcmp(args[0], "\\WHO") == 0){
-
- //    }
- //    else if(strcmp(args[0], "\\HELP") == 0){
-
- //    }
+	else if(strcmp(args[0], "\\LEAVE") == 0){
+		leave(connfd);
+    }
+    else if(strcmp(args[0], "\\WHO") == 0){
+    	who(connfd);
+    }
+    else if(strcmp(args[0], "\\HELP") == 0){
+    	help(connfd);
+    }
  //    else if( condition for nickname and message ){
  //      //send message to nickname from sender
  //    }

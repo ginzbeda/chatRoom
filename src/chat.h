@@ -11,6 +11,7 @@ using namespace std;
 typedef struct user {
 	char nickname[16];
 	int connfd;
+	char room[25];
 	bool chatting;
 }user;
 
@@ -33,4 +34,5 @@ int mess(char name[25], char msg[MAXLINE], int connfd);
 class Chat {
 public:
 	static vector<chatroom> chatrms;
+	static vector<user> usrs;
 };
