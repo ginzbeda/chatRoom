@@ -1,9 +1,9 @@
 #include "chat.h"
-
+#include "connection.h"
 
 
 //must change user to chatting if return 1
-user createUsr(char name[16],  sockaddr_in *server_addr){
+user createUsr(char name[16],  sockaddr_in *server_addr, int connfd){
 	user born;
 	strncpy(born.nickname, name, strlen(name));
 	born.server_addr = server_addr;
@@ -11,19 +11,27 @@ user createUsr(char name[16],  sockaddr_in *server_addr){
 	return born;
 }
 
-int chattr(user *change){
+int chattr(user *change, int connfd){
 	change->chatting = true;
 	return 1;
 }
 
-int join(char *name, char *room){
+int join(char *name, char *room, int connfd){
 	// for(int i=0; i<Chat::chatrms.size(); i++){
 	// 	if()
 	// }
 	return 1;
 }
-int rooms();
-int leave();
-int who();
-int help();
-int mess(char name[25], char msg[MAXLINE]);
+int rooms(int connfd){
+	if(Chat::chatrms.size()>0){
+		for(size_t i = 0; i<Chat::chatrms.size(); i++){
+			send_message(connfd, "Room: " Chat::chatrms[i]);
+		}
+		return 1;
+	}
+	return -1;
+}
+int leave(int connfd);
+int who(int connfd);
+int help(int connfd);
+int mess(char name[25], char msg[MAXLINE], int connfd);

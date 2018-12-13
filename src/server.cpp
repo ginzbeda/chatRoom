@@ -70,29 +70,29 @@ void *thread(void *vargp) {
   	}
   	//check first token for commands
   	if(strcmp(args[0], "\\JOIN")){
-        join(args[1], args[2]);
-    }else if (strcmp(args[0], "\\ROOMS") == 0)
-    {
+        join(args[1], args[2], connfd);
+    }else if (strcmp(args[0], "\\ROOMS",) == 0){
+		room(connfd);
+	}
+	// else if(strcmp(args[0], "\\LEAVE") == 0){
 
-    }else if(strcmp(args[0], "\\LEAVE") == 0)
-    {
+ //    }
+ //    else if(strcmp(args[0], "\\WHO") == 0){
 
-    }else if(strcmp(args[0], "\\WHO") == 0)
-    {
+ //    }
+ //    else if(strcmp(args[0], "\\HELP") == 0){
 
-    }else if(strcmp(args[0], "\\HELP") == 0)
-    {
-
-    }else if(/* condition for nickname and message */)
-      //send message to nickname from sender
+ //    }
+ //    else if( condition for nickname and message ){
+ //      //send message to nickname from sender
+ //    }
     
-    }else if(/* condition for incorrect command*/)
-    {
-      //print error message
-
-    }else{
-      //send message to every connected client
-    }
+ //    else if(/* condition for incorrect command*/){
+ //      //print error message
+ // 	}
+ // 	else{
+ //      //send message to every connected client
+ //    }
   	
   }
   printf("client disconnected.\n");
