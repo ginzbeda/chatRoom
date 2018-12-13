@@ -53,12 +53,31 @@ int leave(int connfd);
 int who(int connfd){
  return 0;
 }
+
+
 int help(int connfd){
 	char buff[] = "The following commands are available :-\n \\JOIN\n \\ROOMS\n \\WHO\n \\LEAVE\n \\nickname message\n";
 	send_message(connfd,(char *)buff);
 	return 1;
 }
-int mess(char name[25], char msg[MAXLINE], int connfd);
+
+
+int mess(char name[25], char msg[MAXLINE], int connfd)
+{
+	for(int i=0; i<Chat::chatrms.size(); i++)
+	{
+		for(int j=0; j<Chat::chatrms[i].usrs.size(); j++)
+		{
+			if(strncmp((char *)name,Chat::chatrms[i].usrs[j].nickname,16) == 0)
+			{
+				send_message(Chat::chatrms[i].usrs[j].connfd,(char *)msg);
+				send_message(connfd,(char *)msg);
+				return 1;
+			}
+		}
+	}
+	return -1;
+}
 
 
 
