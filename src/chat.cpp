@@ -17,9 +17,15 @@ int chattr(user *change){
 }
 
 int join(char *name, char *room){
-	// for(int i=0; i<Chat::chatrms.size(); i++){
-	// 	if()
-	// }
+	for(int i=0; i<Chat::chatrms.size(); i++){
+		if(chatrms[i].name == room) // comparing char *
+		{
+			user nuser;
+			nuser.nickname = name
+			nuser.chatting = true;
+			chatrms[i].usrs.push_back(nuser);
+		}
+	}
 	return 1;
 }
 int rooms();
