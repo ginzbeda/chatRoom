@@ -72,7 +72,7 @@ void *thread(void *vargp) {
     }else if (strcmp(args[0], "\\ROOMS") == 0){
 		  rooms(connfd);
 	   }
-	else if(strcmp(args[0], "\\LEAVE") == 0){
+	   else if(strcmp(args[0], "\\LEAVE") == 0){
 		leave(connfd);
     }
     else if(strcmp(args[0], "\\WHO") == 0){
@@ -81,7 +81,7 @@ void *thread(void *vargp) {
     else if(strcmp(args[0], "\\HELP") == 0){
     	help(connfd);
     }
-    else if(strcmp(args[0], ) == 0){
+    else if((args.size()) == 2 && (/*  */)){
       mess(args[0],args[1],connfd);
     }
     
@@ -91,6 +91,11 @@ void *thread(void *vargp) {
  	else{
       //send message to every connected client
     }
+    
+
+
+
+
   	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!

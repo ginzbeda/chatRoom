@@ -1,7 +1,6 @@
 #include "chat.h"
 #include "connection.h"
 
-<<<<<<< HEAD
 vector<Chatroom *> Chat::chatrms;
 
 //must change user to chatting if return 1
@@ -12,9 +11,6 @@ vector<Chatroom *> Chat::chatrms;
 // 	born.chatting = false;
 // 	return born;
 // }
-=======
-vector<Chatroom*> Chat::chatrms;
-
 
 int join(char *name, char *room, int connfd){
 	//Creates new User
@@ -59,8 +55,8 @@ int leave(int connfd){
 				//MIGHT CAUSE PROBLEM
 
 				Chat::chatrms[i]->getUsrLst()[j]->erase();
-				char* bye = "GOODBYE";
-				send_message(connfd, bye);
+				// char* bye = "GOODBYE";
+				send_message(connfd, "GOODBYE");
 				return 1;
 			}
 		}

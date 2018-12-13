@@ -16,6 +16,7 @@ int leave(int connfd);
 int who(int connfd);
 int help(int connfd);
 int mess(char name[25], char msg[MAXLINE], int connfd);
+int message_everyone(int connfd); //fucntion to message everyone in case command was not found
 
 
 class User {
