@@ -94,6 +94,7 @@ void *thread(void *vargp) {
  // 	else{
  //      //send message to every connected client
  //    }
+    strncpy(buff, "", strlen(buff));
   	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!
