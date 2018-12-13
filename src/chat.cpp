@@ -39,7 +39,7 @@ int rooms(int connfd){
 }
 int leave(int connfd)
 {
-
+	
 }
 int who(int connfd);
 int help(int connfd);
