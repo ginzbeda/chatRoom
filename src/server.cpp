@@ -48,7 +48,7 @@ void *thread(void *vargp) {
   // Detach the thread to self reap.
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
-  free(vargp);
+  // free(vargp);
   User* nUser = new User(connfd);
   //input
   char buff[MAXLINE];
@@ -106,8 +106,9 @@ void *thread(void *vargp) {
 	      	message_everyone(buff, nUser); 
 	      	pthread_mutex_unlock(&lck);
 	    }
-
+	    cout<< "1a"<< endl;
 		args.clear();
+		cout<< "2a"<< endl;
     	memset(buff, 0, MAXLINE);
   	}
   printf("client disconnected.\n");

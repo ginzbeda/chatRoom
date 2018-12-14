@@ -25,7 +25,7 @@ void join(char *name, char *room, User* nUser){
 		//Searches for chatroom
 		for(size_t i = 0; i< Chat::chatrms.size(); i++){
 			//If found
-			if(strncmp(Chat::chatrms[i]->getNm(), room, strlen(room))==0){
+			if((strlen(Chat::chatrms[i]->getNm())== strlen(room)) && (strncmp(Chat::chatrms[i]->getNm(), room, strlen(Chat::chatrms[i]->getNm()))==0)){
 				found = true;
 				// cout<<"Room: " << (nUser->getChatrm()!=NULL)<< endl;
 				//Adds user to room
@@ -54,20 +54,21 @@ void join(char *name, char *room, User* nUser){
 	
 }
 void rooms(User* usr){
-	char* buf;
+	
 	int connfd = usr->getCon();
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
-			buf = (char*) Chat::chatrms[i]->name;
+			char* buf = (char*) Chat::chatrms[i]->name;
 			strcat(buf, " ");
 			send_message(connfd, buf);
 		}
+		// memset(buf, 0, MAXLINE);
 	}
 	else{
 		char* buf = (char*) "No chat rooms";
 		send_message(connfd, buf);
 	}
-	memset(buf, 0, MAXLINE);
+	
 }
 
 
@@ -95,21 +96,24 @@ void leave(User* usr){
 
 void who(User* usr){
 	int connfd = usr->getCon();
-	char* buf;
+	
 	Chatroom* rum = usr->getChatrm();
 	if(rum == NULL) {
 		char* buf = (char*) "Not in a room";
 		send_message(connfd, buf);
 	}
 	else{
+		char* buf;
 		vector<User*> usrs = rum->getUsrLst();
 		for(size_t i=0; i<usrs.size(); i++){
-			buf = usrs[i]->getName();
+			buf = (char*) usrs[i]->getName();
 			strcat(buf, " ");
 			send_message(connfd, buf);
 		}
+		// memset(buf, 0, MAXLINE);
+		cout<< "5"<< endl;
 	}
-	memset(buf, 0, MAXLINE);
+
 }
 
 
@@ -149,28 +153,24 @@ void message_everyone(char message[MAXLINE], User* usr)
 			//step 3a : we know the chatroom when we were finding the nickname
 			//step 3b : loop through the user list in his chat room
 			//step 3c : send_message() to every user in that list
-	if(usr->getChatrm() == NULL){
-		for(size_t i=0; i<Chat::chatrms.size(); i++)
-		{
-			for(size_t j=0; j<Chat::chatrms[i]->getUsrLst().size(); j++)
+	if(usr->getChatrm() != NULL){
+		// for(size_t i=0; i<Chat::chatrms.size(); i++)
+		// {
+		cout<< "2a"<< endl;
+		char messg[MAXLINE]; // stores the message to be sent to everyone in the room
+		strcpy(messg,usr->getName());// message now has the nickname of the sender
+		strcat(messg, ": "); //appends ':' to the message
+		strcat(messg,message); // appends the actual message after "nickname: "
+		cout<< "3b"<< endl;
+			for(size_t j=0; j<usr->getChatrm()->getUsrLst().size(); j++)
 			{
-				if(strncmp((char *)usr->getName(),Chat::chatrms[i]->getUsrLst()[j]->getName(),16) == 0)
-				{
-					char messg[MAXLINE+20]; // stores the message to be sent to everyone in the room
-					strcpy(messg,usr->getName());// message now has the nickname of the sender
-					int len = strlen(messg);
-					messg[len] = ':'; //appends ':' to the message
-					messg[len + 1] = ' '; // appends ' ' to the message
-					strcat(messg,message); // appends the actual message after "nickname: "
-					for(int k=0; j<Chat::chatrms[i]->getUsrLst().size(); k++)
-					{
-						int fd = Chat::chatrms[i]->getUsrLst()[k]->getCon();//gets the file descriptor of every user in the chat room
-						send_message(fd,messg);//sends all of them the message
-						//this also includes the sender
-					}
-				}
+				cout<< "3a"<< endl;
+				int fd = usr->getChatrm()->getUsrLst()[j]->getCon();//gets the file descriptor of every user in the chat room
+				send_message(fd,messg);//sends all of them the message
+				//this also includes the sender
+					
+				cout<< "4a"<< endl;
 			}
-		}
 	}
 	else{
 		char* buf = (char*) "Not in Chatroom";
