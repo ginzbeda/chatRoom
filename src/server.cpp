@@ -3,6 +3,7 @@
 #include "connection.h"
 
 char message_buf[512];
+pthread_mutex_t lck = PTHREAD_MUTEX_INITIALIZER;
 
 void init_message_buf(){
 	for(size_t i = 0; i<strlen(message_buf); i++){
@@ -53,52 +54,61 @@ void *thread(void *vargp) {
   char buff[MAXLINE];
   //token holder
   vector<char*> args;
-  // Handle the echo client requests.
+  // Handle the client requests.
   while(receive_message(connfd, buff)){
-  	cout<< "prompt recieved: " << buff <<endl;
-  	//separate input into tokens
-  	char *token = strtok(buff, " ");
-  	//push tokens into holder
-  	while(token != NULL){
-  		args.push_back(token);
-  		token = strtok(NULL, " ");
-  	}
-  	for(size_t i = 0; i<args.size();i++){
-  		cout<<args[i] <<endl;
-  	}
-  	//check first token for commands
-    if(*(args[0]) == '\\') // checks if its a command by checking if the first character of the first token is '\'
-    { 
-      if(strcmp(args[0], "\\JOIN")){
-        join(args[1], args[2], nUser);
-      }else if (strcmp(args[0], "\\ROOMS") == 0){
-        rooms(nUser);
-       }
-       else if(strcmp(args[0], "\\LEAVE") == 0){
-      leave(nUser);
-      }
-      else if(strcmp(args[0], "\\WHO") == 0){
-       who(nUser);
-      }
-      else if(strcmp(args[0], "\\HELP") == 0){
-       help(nUser);
-      }
-      else if((args.size()) == 2){ // \nickname message is the only COMMAND with 2 arguments
-        mess(args[0]+1,args[1],nUser); // the +1 is for getting rid of the '\' in the command and sends just the nickname and not \nickname
-      }else{
-        char str0[50],str1[50],str2[30]; // uses three char[] to join to form the command "\LAEVE" command not recognized.
-        strcpy(str0,"\"")                 //trust me, it works
-        strcpy(str1,args[0]);
-        strcpy(str2,"\" command not recognized.\n");
-        strcat(str1,str2);
-        strcat(str0,str1)
-        send_message(connfd,str0);
-      }
-    }else{
-      //sends message to everyone
-      message_everyone(buff, nUser); 
-    }
-    strncpy(buff, "", strlen(buff));
+	  	cout<< "prompt recieved: " << buff <<endl;
+	  	//separate input into tokens
+	  	char *token = strtok(buff, " ");
+	  	//push tokens into holder
+	  	while(token != NULL){
+	  		args.push_back(token);
+	  		token = strtok(NULL, " ");
+	  	}
+	  	for(size_t i = 0; i<args.size();i++){
+	  		cout<<"args " << i << ": " <<args[i] <<endl;
+	  	}
+	  	//check first token for commands
+	    if(*(args[0]) == '\\') // checks if its a command by checking if the first character of the first token is '\'
+	    { 
+		    if(strcmp(args[0], "\\JOIN") == 0){
+		    	join(args[1], args[2], nUser);
+		    }
+		    else if (strcmp(args[0], "\\ROOMS") == 0){
+		    	rooms(nUser);
+		    }
+		    else if(strcmp(args[0], "\\LEAVE") == 0){
+		    	leave(nUser);
+		    }
+		    else if(strcmp(args[0], "\\WHO") == 0){
+		    	who(nUser);
+		    }
+		    else if(strcmp(args[0], "\\HELP") == 0){
+		    	help(nUser);
+		    }
+		    else if((args.size()) == 2){ // \nickname message is the only COMMAND with 2 arguments
+		    	pthread_mutex_lock(&lck);
+		    	mess(args[0]+1,args[1],nUser); // the +1 is for getting rid of the '\' in the command and sends just the nickname and not \nickname
+		    	pthread_mutex_unlock(&lck);
+		    }
+		    else{
+		    	char str0[50],str1[50],str2[30]; // uses three char[] to join to form the command "\LAEVE" command not recognized.
+		    	strcpy(str0,"\"");                 //trust me, it works
+		    	strcpy(str1,args[0]);
+		    	strcpy(str2,"\" command not recognized.\n");
+		    	strcat(str1,str2);
+		    	strcat(str0,str1);
+		    	send_message(connfd,str0);
+		    }
+    	}
+	    else{
+	      //sends message to everyone
+	    	pthread_mutex_lock(&lck);
+	      	message_everyone(buff, nUser); 
+	      	pthread_mutex_unlock(&lck);
+	    }
+
+		args.clear();
+    	memset(buff, 0, MAXLINE);
   	}
   printf("client disconnected.\n");
   // Don't forget to close the connection!

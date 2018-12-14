@@ -2,6 +2,7 @@ from socket import *
 SERVER_NAME = 'localhost'
 SERVER_PORT = 9000
 import sys
+import threading
 
 def connect():
 	sock = socket(AF_INET, SOCK_STREAM)
@@ -16,11 +17,17 @@ def send(sock, message):
 def recv(sock):
 		return sock.recv(1024).decode('utf-8')
 
+def recvT(sock):
+		while 1:
+			print(recv(sock).strip())
+
 def ask(prompt=':-p'):
-    return input('({prompt}) ')
+    return input()
 
 def client():
 	connection = connect()
+	t = threading.Thread(target = recvT, args=(connection, ))
+	t.start()
 	if len(sys.argv)>1:
 		# if there is a file
 		with open(sys.argv[1]) as f:
@@ -31,8 +38,6 @@ def client():
 			print(content)
 			while  count < size:
 				send(connection, content[count])
-				response = recv(connection)
-				print(response.strip())
 				count+=1
 
 	else:
@@ -40,8 +45,6 @@ def client():
 		message = ask()
 		while message != "/QUIT":
 			send(connection, message)
-			response = recv(connection)
-			print(response.strip())
 			message = ask()
 
 

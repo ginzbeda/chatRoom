@@ -20,7 +20,7 @@ typedef struct sockaddr SA; //should be sockaddr_in
 
 //variable for username - char *username; or string username; if we need username lengths later
 
-#define MAXLINE 8192 // maximum length of a line - max length of a message
+#define MAXLINE 512 // maximum length of a line - max length of a message
 #define LISTENQ 1024 // second argument to listen() - is usually 5 but idk
 
 //initialize message buffer

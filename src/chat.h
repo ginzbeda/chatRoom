@@ -2,7 +2,7 @@
 #include <vector>
 #include <string.h>
 #include <netinet/in.h>
-#define MAXLINE 8192
+#define MAXLINE 512
 
 using namespace std;
 class User;
@@ -11,13 +11,13 @@ class Chat;
 
 //Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
 
-int join(char *name, char *room, User* usr);
-int rooms(User* usr);
-int leave(User* usr);
-int who(User* usr);
-int help(User* usr);
-int mess(char name[25], char msg[MAXLINE], User* usr);
-int message_everyone(char msg[MAXLINE], User* usr);
+void join(char *name, char *room, User* usr);
+void rooms(User* usr);
+void leave(User* usr);
+void who(User* usr);
+void help(User* usr);
+void mess(char name[25], char msg[MAXLINE], User* usr);
+void message_everyone(char msg[MAXLINE], User* usr);
 
 class User {
 public:
@@ -29,10 +29,10 @@ public:
 		connfd = fd;
 	}
 
-	static void setChatrm(Chatroom *rum){
+	void setChatrm(Chatroom *rum){
 		room = rum;
 	}
-	static Chatroom *getChatrm(){
+	Chatroom *getChatrm(){
 		return room;
 	}
 	void namer(char* name){
@@ -55,14 +55,28 @@ public:
 		strncpy(name, nm, 25);
 	}
 
-	static void addUsr(User *usr){
+	 void addUsr(User *usr){
 		usrs.push_back(usr);
 	}
-	static vector<User *> getUsrLst(){
+	 vector<User *> getUsrLst(){
 		return usrs;
 	}
+	void rmUsr(User *usr){
 
-	static char *getNm(){
+		for(vector<User *>::iterator p = usrs.begin(); p != usrs.end(); ++p){
+			cout<< "(*p)->getName(): " << (*p)->getName()<< endl;
+			cout<< "usr->getName(): " << usr->getName() << endl;
+			if(strcmp((*p)->getName(), usr->getName()) == 0){
+				cout<< "1" << endl;
+				usrs.erase(p);
+				cout<< "2" << endl;
+				break;
+			}
+		}
+		usr->setChatrm(0);
+	}
+
+	 char *getNm(){
 		return (char *) name;
 	}
 };
