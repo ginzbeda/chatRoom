@@ -9,7 +9,6 @@ class User;
 class Chatroom;
 class Chat;
 
-//Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
 
 void join(char *name, char *room, User* usr);
 void rooms(User* usr);
@@ -21,7 +20,7 @@ void message_everyone(char msg[MAXLINE], User* usr);
 
 class User {
 public:
-	char nickname[16]; //PROBLEMS WITH USING THESE VARIABLES IN STATIC METHODS
+	char nickname[16]; 
 	int connfd;
 	Chatroom *room;
 	
@@ -67,9 +66,7 @@ public:
 			cout<< "(*p)->getName(): " << (*p)->getName()<< endl;
 			cout<< "usr->getName(): " << usr->getName() << endl;
 			if(strcmp((*p)->getName(), usr->getName()) == 0){
-				cout<< "1" << endl;
 				usrs.erase(p);
-				cout<< "2" << endl;
 				break;
 			}
 		}
