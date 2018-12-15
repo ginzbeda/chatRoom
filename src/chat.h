@@ -9,7 +9,6 @@ class User;
 class Chatroom;
 class Chat;
 
-//Joins chatroom (returns 1) Creates chatroom and joins (returns 2)
 
 void join(char *name, char *room, User* usr);
 void rooms(User* usr);
@@ -18,6 +17,7 @@ void who(User* usr);
 void help(User* usr);
 void mess(char name[25], char msg[MAXLINE], User* usr);
 void message_everyone(char msg[MAXLINE], User* usr);
+void ban(char* name, char* room, User* usr);
 
 class User {
 public:
@@ -49,6 +49,7 @@ public:
 class Chatroom {
 public:
 	vector <User *> usrs;
+	vector <int> ban;
 	char name[25];
 
 	Chatroom(char* nm){
@@ -64,12 +65,8 @@ public:
 	void rmUsr(User *usr){
 
 		for(vector<User *>::iterator p = usrs.begin(); p != usrs.end(); ++p){
-			cout<< "(*p)->getName(): " << (*p)->getName()<< endl;
-			cout<< "usr->getName(): " << usr->getName() << endl;
 			if(strcmp((*p)->getName(), usr->getName()) == 0){
-				cout<< "1" << endl;
 				usrs.erase(p);
-				cout<< "2" << endl;
 				break;
 			}
 		}
@@ -78,6 +75,31 @@ public:
 
 	 char *getNm(){
 		return (char *) name;
+	}
+
+	int getBan(User* usr){
+		for(size_t i=0; i<ban.size(); i++){
+			if(ban[i] == usr->getCon()){
+				return 1;
+			}
+		}
+		return 0;
+	}
+	void banUsr(User* usr){
+		for(size_t i=0; i<ban.size(); i++){
+			if(ban[i] == usr->getCon()){
+				return;
+			}
+		}
+		ban.push_back(usr->getCon());
+	}
+	void rmBan(User* usr){
+		for(vector<int>::iterator p = ban.begin(); p != ban.end(); ++p){
+			if((*p) == usr->getCon()){
+				ban.erase(p);
+				break;
+			}
+		}
 	}
 };
 

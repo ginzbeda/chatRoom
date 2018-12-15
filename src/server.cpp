@@ -48,7 +48,7 @@ void *thread(void *vargp) {
   // Detach the thread to self reap.
   pthread_detach(pthread_self());
   // Free the incoming argument - allocated in the main thread.
-  // free(vargp);
+  free(vargp);
   User* nUser = new User(connfd);
   //input
   char buff[MAXLINE];
@@ -71,19 +71,28 @@ void *thread(void *vargp) {
 	    if(*(args[0]) == '\\') // checks if its a command by checking if the first character of the first token is '\'
 	    { 
 		    if(strcmp(args[0], "\\JOIN") == 0){
+		    	cout<< "Joining: " << args[1] << " to room: " << args[2] <<endl;
 		    	join(args[1], args[2], nUser);
 		    }
 		    else if (strcmp(args[0], "\\ROOMS") == 0){
+		    	cout<< "Listing rooms"<<endl;
 		    	rooms(nUser);
 		    }
 		    else if(strcmp(args[0], "\\LEAVE") == 0){
+		    	cout<< "Leaving room" <<endl;
 		    	leave(nUser);
 		    }
 		    else if(strcmp(args[0], "\\WHO") == 0){
+		    	cout<<"Listing users in room" <<endl;
 		    	who(nUser);
 		    }
 		    else if(strcmp(args[0], "\\HELP") == 0){
+		    	cout<<"Listing commands" <<endl;
 		    	help(nUser);
+		    }
+		    else if(strcmp(args[0], "\\BAN")==0){
+		    	cout<< "Banning user: " << args[1] << " from: " << args[2]<<endl;
+		    	ban(args[1], args[2], nUser);
 		    }
 		    else if((args.size()) == 2){ // \nickname message is the only COMMAND with 2 arguments
 		    	pthread_mutex_lock(&lck);
@@ -91,6 +100,7 @@ void *thread(void *vargp) {
 		    	pthread_mutex_unlock(&lck);
 		    }
 		    else{
+		    	cout<< "command not recognized" <<endl;
 		    	char str0[50],str1[50],str2[30]; // uses three char[] to join to form the command "\LAEVE" command not recognized.
 		    	strcpy(str0,"\"");                 //trust me, it works
 		    	strcpy(str1,args[0]);
@@ -102,13 +112,12 @@ void *thread(void *vargp) {
     	}
 	    else{
 	      //sends message to everyone
+	    	cout<<"Sending message to everyone" <<endl;
 	    	pthread_mutex_lock(&lck);
 	      	message_everyone(buff, nUser); 
 	      	pthread_mutex_unlock(&lck);
 	    }
-	    cout<< "1a"<< endl;
 		args.clear();
-		cout<< "2a"<< endl;
     	memset(buff, 0, MAXLINE);
   	}
   printf("client disconnected.\n");

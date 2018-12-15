@@ -32,13 +32,13 @@ def client():
 		# if there is a file
 		with open(sys.argv[1]) as f:
 			content = f.readlines()
-			content = [x.strip() for x in content] 
-			size = len(content)
-			count = 0
-			print(content)
-			while  count < size:
-				send(connection, content[count])
-				count+=1
+		content = [x.strip() for x in content] 
+		size = len(content)
+		count = 0
+		print(content)
+		while  count < size:
+			send(connection, content[count])
+			count+=1
 
 	else:
 		# else take input
