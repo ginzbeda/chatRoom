@@ -10,26 +10,32 @@ def connect():
 	
 	return sock
 
-def send(sock, message):
+# @param {*} sock - the socket on which the server and client are communicating
+# @param {*} message - the message that is being communicated
+def send(sock, message): #send message through the socket sock
 	sock.send(bytearray(message, 'utf-8'))
 
 
-def recv(sock):
+# @param {*} sock - the socket on which the server and client are communicating
+def recv(sock): #recieves messages on the socket sock
 		return sock.recv(1024).decode('utf-8')
 
-def recvT(sock):
+
+# @param {*} sock - the socket on which the server and client are communicating
+def recvT(sock): #recieves a stripped message on the socket sock
 		while 1:
 			print(recv(sock).strip())
 
-def ask(prompt=':-p'):
+
+def ask(prompt=':-p'): #returns an input from stdin
     return input()
 
-def client():
+
+def client(): # connects to a server, sends and recieves messages from the server
 	connection = connect()
 	t = threading.Thread(target = recvT, args=(connection, ))
 	t.start()
 	if len(sys.argv)>1:
-		# if there is a file
 		with open(sys.argv[1]) as f:
 			content = f.readlines()
 		content = [x.strip() for x in content] 
@@ -41,7 +47,6 @@ def client():
 			count+=1
 
 	else:
-		# else take input
 		message = ask()
 		while message != "/QUIT":
 			send(connection, message)

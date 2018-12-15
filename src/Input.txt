@@ -1,0 +1,6 @@
+\JOIN john room
+\WHO
+"hello"
+\HELP
+\LEAVE
+\ROOMS

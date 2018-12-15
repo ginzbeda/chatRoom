@@ -4,9 +4,16 @@
 
 vector<Chatroom *> Chat::chatrms;
 
+//Join a room
+/*
+  @param {char*} name - nickname to join under
+  @param {char*} room - room to join
+  @param {User*} usr - takes in a pointer to User
+*/
 void join(char *name, char *room, User* nUser){
 	char* buf;
 	bool found = false;
+	//checks for room and name
 	if(strlen(name)==0) {
 		buf = (char*) "No nickname";
 		send_message(nUser->getCon(), buf);
@@ -27,9 +34,9 @@ void join(char *name, char *room, User* nUser){
 			//If found
 			if((strlen(Chat::chatrms[i]->getNm())== strlen(room)) && (strncmp(Chat::chatrms[i]->getNm(), room, strlen(Chat::chatrms[i]->getNm()))==0)){
 				found = true;
+				//Checks for ban
 				if(Chat::chatrms[i]->getBan(nUser)){
 					char* buf = (char*) "You are banned from: ";
-					cout<<"12"<<endl;
 					send_message(nUser->getCon(), buf);
 					char* buf2 = (char*) room;
 					send_message(nUser->getCon(), buf2);
@@ -59,14 +66,18 @@ void join(char *name, char *room, User* nUser){
 		}
 	
 }
+//Lists rooms
+/*
+  @param {User*} usr - takes in a pointer to User
+*/
 void rooms(User* usr){
-	
 	int connfd = usr->getCon();
 	if(Chat::chatrms.size()>0){
 		for(size_t i = 0; i<Chat::chatrms.size(); i++){
 			char* buf = (char*) Chat::chatrms[i]->name;
-			strcat(buf, " ");
 			send_message(connfd, buf);
+			char* buf2 = (char*)" ";
+			send_message(connfd, buf2);
 		}
 	}
 	else{
@@ -76,7 +87,10 @@ void rooms(User* usr){
 	
 }
 
-
+//Leaves current chatroom
+/*
+  @param {User*} usr - takes in a pointer to User
+*/
 void leave(User* usr){
 	bool present = false;
 	int connfd = usr->getCon();
@@ -98,7 +112,10 @@ void leave(User* usr){
 }
 
 
-
+//Lists Users in chatroom
+/*
+  @param {User*} usr - takes in a pointer to User
+*/
 void who(User* usr){
 	int connfd = usr->getCon();
 	
@@ -112,23 +129,31 @@ void who(User* usr){
 		vector<User*> usrs = rum->getUsrLst();
 		for(size_t i=0; i<usrs.size(); i++){
 			buf = (char*) usrs[i]->getName();
-			strcat(buf, " ");
 			send_message(connfd, buf);
+			char* buf2 =(char*) " ";
+			send_message(connfd, buf2);
 		}
-		cout<< "5"<< endl;
 	}
 
 }
 
 
-
+//Lists roocommands
+/*
+  @param {User*} usr - takes in a pointer to User
+*/
 void help(User* usr){
 	int connfd = usr->getCon();
-	char* buf = (char*) "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\\BAN nickname room (Ban from room)\n\\UBAN nickname room (Unban from room)\\nickname message (Private message)\n'message' (Group Message)";
+	char* buf = (char*) "\\JOIN nickname room (Join room)\n\\ROOMS (List rooms)\n\\LEAVE (Leave room)\n\\WHO (List users in room)\n\\HELP (List commands)\n\\BAN nickname room (Ban from room)\n\\UBAN room (Unban all from room)\\nickname message (Private message)\n'message' (Group Message)";
 	send_message(connfd, buf);
 }
 
-
+//Sends private emssage
+/*
+  @param {char} *name - nickname for destination
+  @param {char} *msgr -message to be sent
+  @param {User*} usr - takes in a pointer to User
+*/
 void mess(char *name, char *msg, User* usr)
 {
 	bool found = false;
@@ -151,28 +176,22 @@ void mess(char *name, char *msg, User* usr)
 	}
 }
 
+//Messages whole chatroom
+/*
+  @param {char} message[MAXLINE] - message to be sent
+  @param {User*} usr - takes in a pointer to User
+*/
 void message_everyone(char message[MAXLINE], User* usr)
 {
-	//step 3 : send the message to everyone in the sender's room including the sender
-			//step 3a : we know the chatroom when we were finding the nickname
-			//step 3b : loop through the user list in his chat room
-			//step 3c : send_message() to every user in that list
 	if(usr->getChatrm() != NULL){
-
-		cout<< "2a"<< endl;
 		char messg[MAXLINE]; // stores the message to be sent to everyone in the room
 		strcpy(messg,usr->getName());// message now has the nickname of the sender
 		strcat(messg, ": "); //appends ':' to the message
 		strcat(messg,message); // appends the actual message after "nickname: "
-		cout<< "3b"<< endl;
 			for(size_t j=0; j<usr->getChatrm()->getUsrLst().size(); j++)
 			{
-				cout<< "3a"<< endl;
 				int fd = usr->getChatrm()->getUsrLst()[j]->getCon();//gets the file descriptor of every user in the chat room
 				send_message(fd,messg);//sends all of them the message
-				//this also includes the sender
-					
-				cout<< "4a"<< endl;
 			}
 	}
 	else{
@@ -180,141 +199,74 @@ void message_everyone(char message[MAXLINE], User* usr)
 		send_message(usr->getCon(), buf);
 	}
 }
-
+//Ban from chatroom
+/*
+  @param {char*} name -User to ban
+  @param {char*} room - room to ban from
+  @param {User*} clnt - user to respond to
+*/
 void ban(char* name, char* room, User* clnt){
 	User* usr;
-	cout<<"1"<<endl;
 	Chatroom* rm;
-	cout<<"2"<<endl;
 	bool found = false;
 	bool found2 = false;
 	for(size_t i =0; i< Chat::chatrms.size(); i++){
-		cout<< "room1: " <<Chat::chatrms[i]->getNm();
-		cout<< "room2: " << room<<endl;
-		cout<< "cmp: " << (strncmp(Chat::chatrms[i]->getNm(),room, strlen(room)) == 0)<< endl;
-		cout<< "size1: " << (strlen(room))<< endl;
-		cout<< "size2: " << (strlen(Chat::chatrms[i]->getNm()))<< endl;
-		cout<< "size: " <<(strlen(room) == strlen(Chat::chatrms[i]->getNm())) << endl;
 		if(strlen(room) == strlen(Chat::chatrms[i]->getNm()) && strncmp(Chat::chatrms[i]->getNm(),room, strlen(room)) == 0){
-			// strlen(room) == strlen(Chat::chatrms[i]->getNm()) && 
-			cout<<"8"<<endl;
 			rm = Chat::chatrms[i];
-			cout<<"9"<<endl;
 			found2 = true;
 		}
-		cout<<"3"<<endl;
 		for(size_t j = 0; j<Chat::chatrms[i]->getUsrLst().size(); j++){
-			cout<<"4"<<endl;
-			cout<< "name1: " <<Chat::chatrms[i]->getUsrLst()[j]->getName()<< endl;
-			cout<< "name2: " << name<<endl;
-			cout<< "size1: " << (strlen(name))<< endl;
-			cout<< "size2: " << (strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()))<< endl;
-			cout<< "size: "<< (strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()))<<endl;
-			cout<< "cmp: " << (strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name, strlen(name))==0)<< endl;
 			if(strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name, strlen(name))==0){
-				// strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name,  strlen(room))==0){
-				cout<<"5"<<endl;
 				usr = Chat::chatrms[i]->getUsrLst()[j];
-				cout<<"6"<<endl;
 				found = true;
 			}
-			cout<<"7 "<< i <<endl;
 		}
 		if(found && found2) {
-			cout<< "hi"<<endl;
 			break;
 		}
 	}
 	if(found && found2){
-		cout<<"10"<<endl;
 		rm->banUsr(usr);
-		cout<<"11"<<endl;
 		char* buf = (char*) "You are banned from: ";
-		cout<<"12"<<endl;
 		send_message(usr->getCon(), buf);
 		char* buf2 = (char*) room;
 		send_message(usr->getCon(), buf2);
 		leave(usr);
-		cout<<"13"<<endl;
 	}
 	else if(!found){
-		cout<<"14"<<endl;
 		char* buf = (char*) "User does not exist";
 		send_message(clnt->getCon(), buf);
 	}
 	else{
-		cout<<"15"<<endl;
 		char* buf = (char*) "Room does not exist";
 		send_message(clnt->getCon(), buf);
 	}
 
 }
-
-void unBan(char* name, char* room, User* clnt){
-	User* usr;
-	cout<<"1"<<endl;
+// Unban all from chatroom
+/*
+  @param {char*} room - room to unban from
+  @param {User*} clnt - User to respond to
+*/
+void unBan(char* room, User* clnt){
 	Chatroom* rm;
-	cout<<"2"<<endl;
-	bool found = false;
-	bool found2 = false;
 	for(size_t i =0; i< Chat::chatrms.size(); i++){
-		cout<< "room1: " <<Chat::chatrms[i]->getNm();
-		cout<< "room2: " << room<<endl;
-		cout<< "cmp: " << (strncmp(Chat::chatrms[i]->getNm(),room, strlen(room)) == 0)<< endl;
-		cout<< "size1: " << (strlen(room))<< endl;
-		cout<< "size2: " << (strlen(Chat::chatrms[i]->getNm()))<< endl;
-		cout<< "size: " <<(strlen(room) == strlen(Chat::chatrms[i]->getNm())) << endl;
+
 		if(strlen(room) == strlen(Chat::chatrms[i]->getNm()) && strncmp(Chat::chatrms[i]->getNm(),room, strlen(room)) == 0){
-			// strlen(room) == strlen(Chat::chatrms[i]->getNm()) && 
-			cout<<"8"<<endl;
 			rm = Chat::chatrms[i];
-			cout<<"9"<<endl;
-			found2 = true;
-		}
-		cout<<"3"<<endl;
-		for(size_t j = 0; j<Chat::chatrms[i]->getUsrLst().size(); j++){
-			cout<<"4"<<endl;
-			cout<< "name1: " <<Chat::chatrms[i]->getUsrLst()[j]->getName()<< endl;
-			cout<< "name2: " << name<<endl;
-			cout<< "size1: " << (strlen(name))<< endl;
-			cout<< "size2: " << (strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()))<< endl;
-			cout<< "size: "<< (strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()))<<endl;
-			cout<< "cmp: " << (strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name, strlen(name))==0)<< endl;
-			if(strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name, strlen(name))==0){
-				// strlen(name) == strlen(Chat::chatrms[i]->getUsrLst()[j]->getName()) && strncmp(Chat::chatrms[i]->getUsrLst()[j]->getName(), name,  strlen(room))==0){
-				cout<<"5"<<endl;
-				usr = Chat::chatrms[i]->getUsrLst()[j];
-				cout<<"6"<<endl;
-				found = true;
+			if(rm->getBanLst().size()>0){
+				rm->rmBan();
+				char* buf = (char*) "Bans were removed";
+				send_message(clnt->getCon(), buf);
+				return;
 			}
-			cout<<"7 "<< i <<endl;
+		
 		}
-		if(found && found2) {
-			break;
-		}
-	if(found && found2){
-		cout<<"10"<<endl;
-		rm->rmBan(usr);
-		cout<<"11"<<endl;
-		char* buf = (char*) "You are unbanned from: ";
-		cout<<"12"<<endl;
-		send_message(usr->getCon(), buf);
-		char* buf2 = (char*) room;
-		send_message(usr->getCon(), buf2);
-		cout<<"13"<<endl;
-	}
-	else if(!found){
-		cout<<"14"<<endl;
-		char* buf = (char*) "User does not exist";
-		send_message(clnt->getCon(), buf);
-	}
-	else{
-		cout<<"15"<<endl;
-		char* buf = (char*) "Room does not exist";
-		send_message(clnt->getCon(), buf);
 	}
 
-	}
+	char* buf = (char*) "Room does not exist";
+	send_message(clnt->getCon(), buf);
+
 }
 
 
